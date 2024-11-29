@@ -196,29 +196,30 @@ function gameLoop() {
     }
   });
 
-  // Отрисовка труб
+// Отрисовка труб
 pipes.forEach(pipe => {
   if (pipePattern) {
     // Верхняя труба
     ctx.save();
-    ctx.translate(pipe.x, 0); // Перемещаем контекст для трубы
+    ctx.translate(pipe.x % pipeWidth, 0); // Фиксируем начальную позицию
     ctx.fillStyle = pipePattern;
-    ctx.fillRect(0, 0, pipeWidth, pipe.y);
-    ctx.restore(); // Возвращаем контекст к исходному состоянию
+    ctx.fillRect(-pipeWidth, 0, pipeWidth, pipe.y); // Начинаем отрисовку чуть раньше края
+    ctx.restore();
 
     // Нижняя труба
     ctx.save();
-    ctx.translate(pipe.x, pipe.y + pipeGap); // Перемещаем контекст для трубы
+    ctx.translate(pipe.x % pipeWidth, pipe.y + pipeGap); // Фиксируем начальную позицию
     ctx.fillStyle = pipePattern;
-    ctx.fillRect(0, 0, pipeWidth, canvas.height - (pipe.y + pipeGap));
-    ctx.restore(); // Возвращаем контекст к исходному состоянию
+    ctx.fillRect(-pipeWidth, 0, pipeWidth, canvas.height - (pipe.y + pipeGap)); // Начинаем отрисовку чуть раньше края
+    ctx.restore();
   } else {
     // Если паттерн не загружен, рисуем простые прямоугольники
-    ctx.fillStyle = "green"; // Запасной цвет
+    ctx.fillStyle = "green";
     ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y); // Верхняя труба
     ctx.fillRect(pipe.x, pipe.y + pipeGap, pipeWidth, canvas.height - (pipe.y + pipeGap)); // Нижняя труба
   }
 });
+
 
 
   // Отрисовка птицы
