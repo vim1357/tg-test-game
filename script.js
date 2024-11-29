@@ -26,12 +26,12 @@ const gravity = 0.4;
 const jumpStrength = -10;
 const birdSize = 32;
 const pipeWidth = 50;
-const pipeGap = 200; // Увеличенное расстояние между трубами
+const pipeGap = 200;
 const pipeSpeed = 2;
 let bird = { x: 150, y: 150, width: birdSize, height: birdSize, velocity: 0 };
 let pipes = [];
-let trail = []; // Хвост птицы
-const trailMaxLength = 200; // Максимальная длина хвоста
+let trail = [];
+const trailMaxLength = 200;
 let score = 0;
 let isGameRunning = false;
 let gameInterval;
@@ -45,7 +45,6 @@ pipeImg.src = "pipe-pattern.png";
 
 let pipePattern = null;
 pipeImg.onload = () => {
-  // Создаем паттерн из изображения
   const tempCanvas = document.createElement("canvas");
   const tempCtx = tempCanvas.getContext("2d");
   tempCanvas.width = pipeImg.width;
@@ -64,8 +63,8 @@ window.addEventListener('resize', resizeCanvas);
 
 // Начать игру
 function startGame() {
-  backgroundAudio.volume = 0.2; // Устанавливаем громкость на 50%
-  backgroundAudio.play(); // Запустить аудио
+  backgroundAudio.volume = 0.2;
+  backgroundAudio.play();
 
   bird.y = canvas.height / 2;
   bird.velocity = 0;
@@ -74,15 +73,14 @@ function startGame() {
   score = 0;
   isGameRunning = true;
   showScreen(gameScreen);
-  
-  // Фиксированная частота кадров (например, 60 FPS)
-  gameInterval = setInterval(gameLoop, 1000 / 60); 
+
+  gameInterval = setInterval(gameLoop, 1000 / 60);
 }
 
 // Закончить игру
 function endGame() {
   isGameRunning = false;
-  clearInterval(gameInterval); // Остановить игровой цикл
+  clearInterval(gameInterval);
   scoreDisplay.textContent = score;
   showScreen(endScreen);
 }
@@ -90,7 +88,7 @@ function endGame() {
 // Обработчики прыжка
 function jump() {
   bird.velocity = jumpStrength;
-  jumpSound.play(); // Воспроизведение звука прыжка
+  jumpSound.play();
 }
 
 // Обработчик для пробела
@@ -100,16 +98,16 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// Обработчик для клика мыши (для ПК)
+// Обработчик для клика мыши
 canvas.addEventListener('click', (e) => {
   if (isGameRunning) {
     jump();
   }
 });
 
-// Обработчик для касания экрана (для мобильных устройств)
+// Обработчик для касания экрана
 canvas.addEventListener('touchstart', (e) => {
-  e.preventDefault();  // Предотвратить стандартное поведение для мобильных устройств
+  e.preventDefault();
   if (isGameRunning) {
     jump();
   }
@@ -124,7 +122,6 @@ function showScreen(screen) {
 // Генерация труб
 function generatePipes() {
   const pipeHeight = Math.random() * (canvas.height - pipeGap - 50) + 25;
-  // Мы создаем новые трубы заранее, сразу за экраном
   pipes.push({ x: canvas.width + pipeWidth, y: pipeHeight, passed: false });
 }
 
@@ -139,7 +136,7 @@ function gameLoop() {
   bird.y += bird.velocity;
 
   // Проверка столкновений
-  if (bird.y + bird.height > canvas.height) { // Птица не должна выходить за нижнюю границу
+  if (bird.y + bird.height > canvas.height) {
     endGame();
     return;
   }
@@ -165,16 +162,15 @@ function gameLoop() {
   }
   ctx.stroke();
 
-  // Генерация труб только, если последняя труба ушла за экран
+  // Генерация труб
   if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 300) {
     generatePipes();
   }
 
   // Перебор труб и движение
   pipes.forEach((pipe, index) => {
-    pipe.x -= pipeSpeed; // Двигаем все трубы влево
+    pipe.x -= pipeSpeed;
 
-    // Проверка столкновения с трубами
     if (
       bird.x < pipe.x + pipeWidth &&
       bird.x + bird.width > pipe.x &&
@@ -184,13 +180,11 @@ function gameLoop() {
       return;
     }
 
-    // Увеличиваем счет, если птичка прошла через трубу
     if (pipe.x + pipeWidth < bird.x && !pipe.passed) {
-      score++; // Увеличиваем счет
-      pipe.passed = true; // Отмечаем, что птичка прошла через трубу
+      score++;
+      pipe.passed = true;
     }
 
-    // Удаление труб, когда они покидают экран
     if (pipe.x + pipeWidth < 0) {
       pipes.splice(index, 1);
     }
@@ -200,36 +194,30 @@ function gameLoop() {
   pipes.forEach(pipe => {
     if (pipePattern) {
       // Верхняя труба
+      ctx.save();
+      ctx.translate(pipe.x, 0);
       ctx.fillStyle = pipePattern;
-      ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y);
+      ctx.fillRect(0, 0, pipeWidth, pipe.y);
+      ctx.restore();
 
       // Нижняя труба
-      ctx.fillRect(pipe.x, pipe.y + pipeGap, pipeWidth, canvas.height - (pipe.y + pipeGap));
+      ctx.save();
+      ctx.translate(pipe.x, pipe.y + pipeGap);
+      ctx.fillStyle = pipePattern;
+      ctx.fillRect(0, 0, pipeWidth, canvas.height - pipe.y - pipeGap);
+      ctx.restore();
     }
   });
 
   // Отрисовка птицы
   ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+
+  // Отрисовка счета
+  ctx.fillStyle = 'black';
+  ctx.font = "20px 'Pixelify Sans', sans-serif";
+  ctx.fillText(`Score: ${score}`, 10, 30);
 }
 
-// События кнопок
+// Обработчики кнопок
 startButton.addEventListener('click', startGame);
 retryButton.addEventListener('click', startGame);
-document.getElementById('donate-button').addEventListener('click', () => {
-  alert('Вы можете поддержать проект на нашем сайте!');
-});
-document.getElementById('donate-button-end').addEventListener('click', () => {
-  alert('Вы можете поддержать проект на нашем сайте!');
-});
-
-// Функция для интеграции с Telegram Web App
-function integrateWithTelegram() {
-  if (window.Telegram) {
-    Telegram.WebApp.setHeaderColor("#FF4500");
-    Telegram.WebApp.setBackgroundColor("#FFFFFF");
-    Telegram.WebApp.onEvent("backPressed", () => {
-      Telegram.WebApp.close(); // Закрытие приложения при нажатии кнопки "Назад"
-    });
-  }
-}
-integrateWithTelegram();
