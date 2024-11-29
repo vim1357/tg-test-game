@@ -201,16 +201,22 @@ pipes.forEach(pipe => {
   if (pipePattern) {
     // Верхняя труба
     ctx.save();
-    ctx.translate(pipe.x % pipeWidth, 0); // Фиксируем начальную позицию
+    ctx.translate(pipe.x, 0); // Перемещаем контекст для трубы
     ctx.fillStyle = pipePattern;
-    ctx.fillRect(-pipeWidth, 0, pipeWidth, pipe.y); // Начинаем отрисовку чуть раньше края
+
+    // Добавляем смещение паттерна, синхронизированное с трубой
+    ctx.translate(-pipe.x, 0);
+    ctx.fillRect(pipe.x, 0, pipeWidth, pipe.y);
     ctx.restore();
 
     // Нижняя труба
     ctx.save();
-    ctx.translate(pipe.x % pipeWidth, pipe.y + pipeGap); // Фиксируем начальную позицию
+    ctx.translate(pipe.x, pipe.y + pipeGap); // Перемещаем контекст для трубы
     ctx.fillStyle = pipePattern;
-    ctx.fillRect(-pipeWidth, 0, pipeWidth, canvas.height - (pipe.y + pipeGap)); // Начинаем отрисовку чуть раньше края
+
+    // Добавляем смещение паттерна, синхронизированное с трубой
+    ctx.translate(-pipe.x, 0);
+    ctx.fillRect(pipe.x, 0, pipeWidth, canvas.height - (pipe.y + pipeGap));
     ctx.restore();
   } else {
     // Если паттерн не загружен, рисуем простые прямоугольники
