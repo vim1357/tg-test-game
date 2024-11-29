@@ -1,0 +1,60 @@
+/* styles.css */
+body {
+  margin: 0;
+  font-family: 'Pixelify Sans', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #fcfbbf;
+}
+
+#score, .button-text, .end-score-text {
+font-family: 'Pixelify Sans', sans-serif;
+font-size: 20px;
+}
+
+#start-screen, #game-screen, #end-screen {
+text-align: center;
+}
+
+button {
+font-family: 'Pixelify Sans', sans-serif;
+font-size: 20px;
+}
+
+.screen {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width: 100%;
+height: 100%;
+}
+
+.hidden {
+display: none;
+}
+
+canvas {
+display: block;
+background-color: #fcfbbf;
+width: 100%;
+height: 100%;
+}
+
+button {
+background-color: #FFA500;
+border: none;
+padding: 10px 20px;
+margin: 10px;
+font-size: 16px;
+color: white;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+
+button:hover {
+background-color: #FF4500;
+}
