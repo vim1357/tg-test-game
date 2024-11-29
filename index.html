@@ -6,9 +6,6 @@
   <title>Flappy Bird</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400&display=swap" rel="stylesheet">
-  
-  <!-- Telegram Web App Integration -->
-  <script async src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 
@@ -37,31 +34,5 @@
   </div>
   
   <script src="script.js"></script>
-  <script>
-    // Инициализация Telegram Web App
-    window.addEventListener('load', function () {
-      if (window.Telegram.WebApp) {
-        // Инициализация мини-приложения
-        Telegram.WebApp.init();
-
-        // Получаем информацию о пользователе (например, ID или имя)
-        const user = Telegram.WebApp.initDataUnsafe;
-        console.log(user); // Выводим информацию о пользователе
-
-        // Если нужно скрыть интерфейс Telegram, используем
-        Telegram.WebApp.expand();
-        
-        // Пример того, как менять заголовок внутри приложения
-        Telegram.WebApp.setTitle("Jumpy Ruble Game");
-        
-        // Меняем кнопки Telegram для донатов
-        const donateButton = document.getElementById("donate-button");
-        donateButton.addEventListener('click', () => {
-          Telegram.WebApp.sendData('donate');
-        });
-      }
-    });
-  </script>
-
 </body>
 </html>
